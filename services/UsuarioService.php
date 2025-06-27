@@ -8,10 +8,17 @@ class UsuarioService {
         $this->repo = new UsuarioRepository();
     }
 
-    public function crearUsuario(array $data): bool {
-        $usuario = new Usuario($data);
-        return $this->repo->guardar($usuario);
+ public function crearUsuario(array $data): bool {
+    $repo = new UsuarioRepository();
+
+    // Verificar si el documento ya existe
+    if ($repo->existeDocumento($data['documento'])) {
+        return false; // Ya existe, evita el guardado
     }
+
+    $usuario = new Usuario($data);
+    return $repo->guardar($usuario);
+}
 
     public function listarUsuarios(): array {
         return $this->repo->listar();

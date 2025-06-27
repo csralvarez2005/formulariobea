@@ -28,7 +28,7 @@
         }
 
         .total-registros {
-            text-align: center;
+            text-align: right;
             margin-bottom: 20px;
             font-weight: bold;
         }
@@ -57,20 +57,6 @@
             background-color: #f9f9f9;
         }
 
-        .volver {
-            margin-top: 20px;
-            display: inline-block;
-            text-decoration: none;
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 6px;
-        }
-
-        .volver:hover {
-            background-color: #0056b3;
-        }
-
         .pagination {
             margin-top: 20px;
             text-align: center;
@@ -89,11 +75,13 @@
         .pagination a.active {
             background-color: #0056b3;
         }
-        .total-registros {
-    text-align: right;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
+
+        .thumbnail {
+            width: 50px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -104,18 +92,15 @@
     require_once __DIR__ . '/../repositories/UsuarioRepository.php';
     $repo = new UsuarioRepository();
 
-    // Configuración de paginación
-    $registrosPorPagina = 10;
+    $registrosPorPagina = 5;
     $paginaActual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
     $offset = ($paginaActual - 1) * $registrosPorPagina;
 
-    // Total de registros
     $totalRegistros = $repo->contarUsuarios();
     $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
 
-    // Obtener registros paginados
     $usuarios = $repo->listarPaginado($registrosPorPagina, $offset);
-    ?>   
+    ?>
 
     <table>
         <thead>
@@ -125,6 +110,10 @@
             <th>Celular</th>
             <th>Email</th>
             <th>Programa</th>
+            <th>Doc. Lado A</th>
+            <th>Doc. Lado B</th>
+            <th>Acta Bachiller</th>
+            <th>Pruebas ICFES</th>
             <th>Creado en</th>
         </tr>
         </thead>
@@ -136,13 +125,74 @@
                 <td><?= htmlspecialchars($usuario['celular']) ?></td>
                 <td><?= htmlspecialchars($usuario['email']) ?></td>
                 <td><?= htmlspecialchars($usuario['programa']) ?></td>
-              <td><?= date('d/m/Y', strtotime($usuario['creado_en'])) ?></td>
+
+                <!-- Documento Lado A -->
+                <td>
+                    <?php if (!empty($usuario['documento_lado_a'])): ?>
+                        <?php if (str_ends_with($usuario['documento_lado_a'], '.pdf')): ?>
+                            <a href="<?= htmlspecialchars($usuario['documento_lado_a']) ?>" target="_blank">📄 Ver PDF</a>
+                        <?php else: ?>
+                            <a href="<?= htmlspecialchars($usuario['documento_lado_a']) ?>" target="_blank">
+                                <img src="<?= htmlspecialchars($usuario['documento_lado_a']) ?>" alt="Lado A" class="thumbnail">
+                            </a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        N/A
+                    <?php endif; ?>
+                </td>
+
+                <!-- Documento Lado B -->
+                <td>
+                    <?php if (!empty($usuario['documento_lado_b'])): ?>
+                        <?php if (str_ends_with($usuario['documento_lado_b'], '.pdf')): ?>
+                            <a href="<?= htmlspecialchars($usuario['documento_lado_b']) ?>" target="_blank">📄 Ver PDF</a>
+                        <?php else: ?>
+                            <a href="<?= htmlspecialchars($usuario['documento_lado_b']) ?>" target="_blank">
+                                <img src="<?= htmlspecialchars($usuario['documento_lado_b']) ?>" alt="Lado B" class="thumbnail">
+                            </a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        N/A
+                    <?php endif; ?>
+                </td>
+
+                <!-- Acta Bachiller -->
+                <td>
+                    <?php if (!empty($usuario['acta_bachiller_url'])): ?>
+                        <?php if (str_ends_with($usuario['acta_bachiller_url'], '.pdf')): ?>
+                            <a href="<?= htmlspecialchars($usuario['acta_bachiller_url']) ?>" target="_blank">📄 Ver PDF</a>
+                        <?php else: ?>
+                            <a href="<?= htmlspecialchars($usuario['acta_bachiller_url']) ?>" target="_blank">
+                                <img src="<?= htmlspecialchars($usuario['acta_bachiller_url']) ?>" alt="Acta Bachiller" class="thumbnail">
+                            </a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        N/A
+                    <?php endif; ?>
+                </td>
+
+                <!-- Pruebas ICFES -->
+                <td>
+                    <?php if (!empty($usuario['pruebas_icfes'])): ?>
+                        <?php if (str_ends_with($usuario['pruebas_icfes'], '.pdf')): ?>
+                            <a href="<?= htmlspecialchars($usuario['pruebas_icfes']) ?>" target="_blank">📄 Ver PDF</a>
+                        <?php else: ?>
+                            <a href="<?= htmlspecialchars($usuario['pruebas_icfes']) ?>" target="_blank">
+                                <img src="<?= htmlspecialchars($usuario['pruebas_icfes']) ?>" alt="Pruebas ICFES" class="thumbnail">
+                            </a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        N/A
+                    <?php endif; ?>
+                </td>
+
+                <td><?= date('d/m/Y', strtotime($usuario['creado_en'])) ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
-    
- <div class="total-registros">Total de registros: <?= $totalRegistros ?></div>
+
+    <div class="total-registros">Total de registros: <?= $totalRegistros ?></div>
     <div class="pagination">
         <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
             <a href="?pagina=<?= $i ?>" class="<?= $i === $paginaActual ? 'active' : '' ?>"><?= $i ?></a>
@@ -151,5 +201,3 @@
 </div>
 </body>
 </html>
-</html>
-

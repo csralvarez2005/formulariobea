@@ -13,6 +13,10 @@ class Usuario {
     public string $etnia;
     public string $sisben;
     public string $programa;
+    public string $documentoLadoA;
+    public string $documentoLadoB;
+    public string $actaBachillerUrl;
+    public string $pruebasIcfes; // Nuevo campo agregado
 
     public function __construct(array $data = []) {
         $this->nombres = $data['nombres'] ?? '';
@@ -28,5 +32,9 @@ class Usuario {
         $this->etnia = $data['etnia'] ?? '';
         $this->sisben = $data['sisben'] ?? '';
         $this->programa = $data['programa'] ?? '';
+        $this->documentoLadoA = $data['documentoLadoA'] ?? '';
+        $this->documentoLadoB = $data['documentoLadoB'] ?? '';
+        $this->actaBachillerUrl = $data['actaBachillerUrl'] ?? '';
+        $this->pruebasIcfes = $data['pruebasIcfes'] ?? ''; // Inicialización del nuevo campo
     }
 }
