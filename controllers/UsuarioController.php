@@ -19,8 +19,8 @@ class UsuarioController {
 
             // Subir Documento Lado A
             if (isset($_FILES['documentoLadoA']) && $_FILES['documentoLadoA']['error'] === 0) {
-                $data['documentoLadoA'] = $this->cloudinary->subirImagen(
-                    $_FILES['documentoLadoA']['tmp_name'],
+                $data['documentoLadoA'] = $this->cloudinary->subirArchivo(
+                    $_FILES['documentoLadoA'],
                     'doc_lado_a_' . uniqid()
                 );
             } else {
@@ -29,18 +29,15 @@ class UsuarioController {
 
             // Subir Documento Lado B
             if (isset($_FILES['documentoLadoB']) && $_FILES['documentoLadoB']['error'] === 0) {
-                $data['documentoLadoB'] = $this->cloudinary->subirImagen(
-                    $_FILES['documentoLadoB']['tmp_name'],
+                $data['documentoLadoB'] = $this->cloudinary->subirArchivo(
+                    $_FILES['documentoLadoB'],
                     'doc_lado_b_' . uniqid()
                 );
             } else {
                 $data['documentoLadoB'] = '';
             }
 
-            // Subir Acta de Bachiller y Pruebas ICFES SOLO si:
-            // 1. Nivel de estudios es 'bachiller'
-            // 2. Colegio no está vacío
-            // 3. Se subieron ambos archivos correctamente
+            // Subir Acta de Bachiller y Pruebas ICFES si corresponde
             if (
                 isset($_POST['nivelEstudios']) &&
                 $_POST['nivelEstudios'] === 'bachiller' &&
@@ -48,20 +45,32 @@ class UsuarioController {
                 isset($_FILES['actaBachiller']) && $_FILES['actaBachiller']['error'] === 0 &&
                 isset($_FILES['pruebasIcfes']) && $_FILES['pruebasIcfes']['error'] === 0
             ) {
-                // Subir acta de bachiller
-                $data['actaBachillerUrl'] = $this->cloudinary->subirImagen(
-                    $_FILES['actaBachiller']['tmp_name'],
+                $data['actaBachillerUrl'] = $this->cloudinary->subirArchivo(
+                    $_FILES['actaBachiller'],
                     'acta_bachiller_' . uniqid()
                 );
 
-                // Subir pruebas ICFES
-                $data['pruebasIcfes'] = $this->cloudinary->subirImagen(
-                    $_FILES['pruebasIcfes']['tmp_name'],
+                $data['pruebasIcfes'] = $this->cloudinary->subirArchivo(
+                    $_FILES['pruebasIcfes'],
                     'pruebas_icfes_' . uniqid()
                 );
             } else {
                 $data['actaBachillerUrl'] = '';
                 $data['pruebasIcfes'] = '';
+            }
+
+            // Subir archivo del SISBEN si el usuario seleccionó "sí"
+            if (
+                isset($_POST['sisben']) &&
+                strtolower($_POST['sisben']) === 'si' &&
+                isset($_FILES['archivoSisben']) && $_FILES['archivoSisben']['error'] === 0
+            ) {
+                $data['archivoSisben'] = $this->cloudinary->subirArchivo(
+                    $_FILES['archivoSisben'],
+                    'sisben_' . uniqid()
+                );
+            } else {
+                $data['archivoSisben'] = '';
             }
 
             // Crear usuario en la base de datos

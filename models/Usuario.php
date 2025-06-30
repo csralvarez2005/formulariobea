@@ -16,7 +16,8 @@ class Usuario {
     public string $documentoLadoA;
     public string $documentoLadoB;
     public string $actaBachillerUrl;
-    public string $pruebasIcfes; // Nuevo campo agregado
+    public string $pruebasIcfes;
+    public string $archivoSisben; // ✅ Nuevo campo para archivo del SISBEN
 
     public function __construct(array $data = []) {
         $this->nombres = $data['nombres'] ?? '';
@@ -35,6 +36,7 @@ class Usuario {
         $this->documentoLadoA = $data['documentoLadoA'] ?? '';
         $this->documentoLadoB = $data['documentoLadoB'] ?? '';
         $this->actaBachillerUrl = $data['actaBachillerUrl'] ?? '';
-        $this->pruebasIcfes = $data['pruebasIcfes'] ?? ''; // Inicialización del nuevo campo
+        $this->pruebasIcfes = $data['pruebasIcfes'] ?? '';
+        $this->archivoSisben = $data['archivoSisben'] ?? ''; 
     }
 }
