@@ -58,18 +58,23 @@ class UsuarioRepository {
         return (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
 
-    public function listarPaginado(int $limite, int $offset): array {
-        $stmt = $this->conn->prepare("
-            SELECT nombres, documento, celular, email, programa, creado_en,
-                   documento_lado_a, documento_lado_b, acta_bachiller_url,
-                   pruebas_icfes, archivo_sisben
-            FROM usuarios
-            ORDER BY creado_en DESC
-            LIMIT ? OFFSET ?
-        ");
-        $stmt->bindValue(1, $limite, PDO::PARAM_INT);
-        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+public function listarPaginado(int $limite, int $offset): array {
+    $stmt = $this->conn->prepare("
+        SELECT id, nombres, documento, celular, email, programa, creado_en,
+               documento_lado_a, documento_lado_b, acta_bachiller_url,
+               pruebas_icfes, archivo_sisben
+        FROM usuarios
+        ORDER BY creado_en DESC
+        LIMIT ? OFFSET ?
+    ");
+    $stmt->bindValue(1, $limite, PDO::PARAM_INT);
+    $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+    public function obtenerPorId($id) {
+    $stmt = $this->conn->prepare("SELECT * FROM usuarios WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }
