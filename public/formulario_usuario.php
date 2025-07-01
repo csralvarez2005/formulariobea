@@ -5,15 +5,41 @@
     <title>Formulario Usuario</title>
     <link rel="stylesheet" href="css/estilos.css"> 
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'creado'): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro exitoso!',
+                    text: 'El usuario ha sido guardado correctamente.',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    window.history.replaceState(null, null, window.location.pathname);
+                });
+            });
+        </script>
+    <?php elseif (isset($_GET['mensaje']) && $_GET['mensaje'] === 'duplicado'): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Documento duplicado',
+                    text: 'Ya existe un usuario con ese número de documento.',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    window.history.replaceState(null, null, window.location.pathname);
+                });
+            });
+        </script>
+    <?php endif; ?>
 </head>
 <body>
     <div class="form-container">
         <h2>Crear Usuario</h2>
-        <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'creado'): ?>
-            <div class="mensaje-exito">¡Guardado con éxito!</div>
-        <?php endif; ?>
-
-       <form action="index.php?action=guardar" method="POST" enctype="multipart/form-data">
+            <form action="index.php?action=guardar" method="POST" enctype="multipart/form-data">
             <div class="input-row">
                 <div class="input-group">
                     <label for="tipoDocumento">Tipo de Documento:</label>
